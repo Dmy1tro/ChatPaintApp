@@ -1,0 +1,49 @@
+<div class="d-flex flex-row justify-content-center align-content-center gap-4 h-100 p-4">
+    <div class="chat-container">
+        <div class="d-block d-inline-block border-bottom">
+            <button type="button" class="btn btn-secondary float-start" (click)="back()">Back</button>
+            <h2 class="text-center">Chat</h2>
+        </div>
+        <div class="table-responsive d-block pb-1 pe-1">
+            <p>Participants: {{ participantsList }}</p>
+            <table class="table text-center">
+                <thead>
+                    <tr class="float-start" scope="col">
+                        <th>Room: {{ roomName }}</th>
+                    </tr>
+                </thead>
+                <tbody #messagesContent class="d-block overflow-auto" style="height: calc(55vh)">
+                    <tr *ngFor="let message of messages">
+                        <td class="col-md-2 text-start">{{ message.userName }}</td>
+                        <td class="col-md-7 text-start" style="white-space: pre-wrap; word-break: break-all;">{{ message.text }}</td>
+                        <td class="col-md-2 text-end">{{ message.createdDate | date:'short' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <form>
+                <div class="mb-3 mt-3">
+                    <textarea #messageToSendInput class="form-control" rows="3" [(ngModel)]="messageToSend" name="text" autofocus></textarea>
+                </div>
+                <button type="button" class="btn btn-primary float-end" (click)="sendMessage()">Send</button>
+            </form>
+        </div>
+    </div>
+    <div class="drawer-container">
+        <div class="d-flex flex-row gap-4 justify-content-center align-items-center border-bottom mb-2">
+            <h2>Paint area</h2>
+            <button type="button" class="btn btn-primary" (click)="clearCanvas()">Clear</button>
+        </div>
+
+        <div class="paint-container">
+            <app-paint
+                [canvasClearEvent$]="canvasClearSubject$.asObservable()"
+                [drawEvent$]="drawSubject$.asObservable()"
+                (onStartDrawing)="onStartDrawing($event)"
+                (onDrawing)="onDrawing($event)"
+                (onFinishDrawing)="onFinishDrawing($event)"
+            >
+            </app-paint>
+        </div>
+    </div>
+</div>

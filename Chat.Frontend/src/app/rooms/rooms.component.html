@@ -1,0 +1,28 @@
+<div class="table-responsive d-block mx-auto col-md-4 my-4">
+    <table class="table table-bordered text-center">
+        <thead class="thead-light">
+            <tr>
+                <th class="col-md-9" scope="col">
+                    <u>Room</u>
+                </th>
+                <th class="col-md-3" scope="col">
+                    <button class="btn btn-primary" (click)="create()">
+                        Create +
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let room of rooms">
+                <td class="col-md-9">
+                    {{ room }}
+                </td>
+                <td class="col-md-3">
+                    <button class="btn btn-success" (click)="join(room)">
+                        Join
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

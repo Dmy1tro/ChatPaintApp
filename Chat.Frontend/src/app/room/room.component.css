@@ -1,0 +1,13 @@
+.chat-container {
+    flex: 1;
+    flex-grow: 1;
+}
+
+.drawer-container {
+    flex: 1.5;
+    flex-grow: 1;
+}
+
+.paint-container {
+    height: 85%;
+}

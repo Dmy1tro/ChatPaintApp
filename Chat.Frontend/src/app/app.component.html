@@ -1,0 +1,4 @@
+<div *ngIf="!hubConnected">
+    <h1>Connecting...</h1>
+</div>
+<router-outlet *ngIf="hubConnected"></router-outlet>
