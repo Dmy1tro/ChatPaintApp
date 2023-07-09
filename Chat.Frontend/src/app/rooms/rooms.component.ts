@@ -11,8 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class RoomsComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
-  
-  private selectedRoom?: string | null
+
   rooms: string[] = []
 
   constructor(private chatService: ChatService,
@@ -59,8 +58,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     if (userName) {
       this.chatService.selectedUserName = userName;
-      this.chatService.selectedRoom = room;
-      this.router.navigate(['/room']);
+      this.router.navigate(['/room', room]);
     }
   }
 }

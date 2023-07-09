@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationStart, Router, ActivatedRoute } from '@angular/router';
 import { Subject, filter, first, map, race, takeUntil } from 'rxjs';
 import { ChatService, ChatHubRequest, Message } from '../services/chat.service';
 import { DrawModel, PaintService } from '../services/paint.service';
@@ -25,11 +25,12 @@ export class RoomComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(private router: Router,
+              private route: ActivatedRoute,
               private chatService: ChatService,
               private paintService: PaintService) { }
 
   ngOnInit(): void {
-    this.roomName = this.chatService.selectedRoom;
+    this.roomName = this.route.snapshot.paramMap.get('name')!;
     this.userName = this.chatService.selectedUserName;
 
     if (!this.roomName || !this.userName) {

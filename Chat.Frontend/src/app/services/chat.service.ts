@@ -64,14 +64,6 @@ export class ChatService {
     return localStorage.getItem('userName') ?? '';
   }
 
-  public get selectedRoom(): string {
-    return localStorage.getItem('room') ?? '';
-  }
-
-  public set selectedRoom(room: string) {
-    localStorage.setItem('room', room);
-  }
-
   public set selectedUserName(userName: string) {
     localStorage.setItem('userName', userName);
   }
