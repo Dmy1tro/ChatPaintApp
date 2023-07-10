@@ -58,7 +58,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
     if (userName) {
       this.chatService.selectedUserName = userName;
-      this.router.navigate(['/room', room]);
+      this.router.navigate(['/room/', room]);
     }
   }
 }

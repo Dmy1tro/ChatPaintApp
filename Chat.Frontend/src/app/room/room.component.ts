@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavigationStart, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Route, Router } from '@angular/router';
 import { Subject, filter, first, map, race, takeUntil } from 'rxjs';
 import { ChatService, ChatHubRequest, Message } from '../services/chat.service';
 import { DrawModel, PaintService } from '../services/paint.service';
@@ -97,7 +97,8 @@ export class RoomComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   runHubRequests() {
-    this.updateMessages(messages => messages.push({ userName: 'You', text: 'Joined the room', createdDate: new Date().toJSON() }));
+    this.messages.push({ userName: 'You', text: 'Joined the room', createdDate: new Date().toJSON() });
+    this.scrollToLatestMessage();
     this.chatService.getParticipantsRequest(this.roomName!);
     this.chatService.getMessages(this.roomName!);
 
@@ -134,37 +135,34 @@ export class RoomComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.participants.join(', ');
   }
 
-  private updateMessages(action: (messages: Message[]) => void): void {
-    this.scrollToLatestMessage();
-    action(this.messages);
-  }
-
   private listenHubEvents() {
     this.chatService.getMessagesResponse$
       .pipe(takeUntil(this.destroy$))
       .subscribe(allMessages => {
-        this.updateMessages(messages => messages.unshift(...allMessages));
-        this.scrollToLatestMessage();
+        this.messages.unshift(...allMessages)
+        this.scrollToLatestMessage({ forceScroll: true });
       });
 
     this.chatService.receivedMessage$
       .pipe(takeUntil(this.destroy$))
       .subscribe(message => {
-        this.updateMessages(messages => messages.push(message));
+        this.messages.push(message);
         this.scrollToLatestMessage();
       });
 
     this.chatService.userJoinedRoom$
       .pipe(takeUntil(this.destroy$))
       .subscribe(userName => {
-        this.updateMessages(messages => messages.push({ userName: userName, text: 'Joined the room', createdDate: new Date().toJSON() }));
+        this.messages.push({ userName: userName, text: 'Joined the room', createdDate: new Date().toJSON() });
+        this.scrollToLatestMessage();
         this.participants.push(userName);
       });
 
     this.chatService.userLeavedRoom$
       .pipe(takeUntil(this.destroy$))
       .subscribe(userName => {
-        this.updateMessages(messages => messages.push({ userName: userName, text: 'Leaved the room', createdDate: new Date().toJSON() }));
+        this.messages.push({ userName: userName, text: 'Leaved the room', createdDate: new Date().toJSON() });
+        this.scrollToLatestMessage();
         this.participants = this.participants.filter(name => name !== userName);
       });
 
@@ -199,14 +197,24 @@ export class RoomComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private scrollToLatestMessage(): void {
+  private scrollToLatestMessage(scrollOptions: { forceScroll: boolean } = { forceScroll: false }): void {
     // Warning dirty hack!
     // Use setTimeout to execute code after angular run change detection and apply UI changes.
     setTimeout(() => {
       const messagesContent = this.messagesContentRef.nativeElement as HTMLElement;
-      messagesContent.scroll({ top: messagesContent.scrollHeight, behavior: 'smooth' });
-
       const messageToSendInput = this.messageToSendInputRef.nativeElement as HTMLElement;
+
+      const lastThreeMessagesHeight = 200; // Approximate height
+      const scrolledUpHeight = Math.abs(messagesContent.scrollHeight - messagesContent.offsetHeight - messagesContent.scrollTop)
+      const isUserWatchingPreviousesMessages = scrolledUpHeight > lastThreeMessagesHeight;
+
+      if (isUserWatchingPreviousesMessages && !scrollOptions.forceScroll) {
+        // Just focus input field and don't scroll to latest message.
+        messageToSendInput.focus();
+        return;
+      }
+
+      messagesContent.scroll({ top: messagesContent.scrollHeight, behavior: 'smooth' });
       messageToSendInput.focus();
     });
   }

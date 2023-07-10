@@ -1,19 +1,21 @@
-<!-- Copied from https://codepen.io/nmcinteer/pen/owZoqe -->
-<div id="color-picker">
-    <div class="wrapper-dropdown">
-        <span (click)="showColorDropDownOptions = !showColorDropDownOptions">
-            <span [style.background]="colorToUse"></span>
-            {{ colorToUse }}
-        </span>
-        <ul *ngIf="showColorDropDownOptions" class="custom-dropdown">
-            <li *ngFor="let color of colors" (click)="setColor(color)">
-                <span [style.background]="color"></span> 
-                {{color}}
-            </li>
-        </ul>
+<div class="d-flex flex-column h-100">
+    <!-- Copied from https://codepen.io/nmcinteer/pen/owZoqe -->
+    <div id="color-picker">
+        <div class="wrapper-dropdown">
+            <span (click)="showColorDropDownOptions = !showColorDropDownOptions">
+                <span [style.background]="colorToUse"></span>
+                {{ colorToUse }}
+            </span>
+            <ul *ngIf="showColorDropDownOptions" class="custom-dropdown">
+                <li *ngFor="let color of colors" (click)="setColor(color)">
+                    <span [style.background]="color"></span>
+                    {{color}}
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
-<!-- End of copied area -->
+    <!-- End of copied area -->
 
-<canvas #canvas class="drawer">
-</canvas>
+    <canvas #canvas class="drawer">
+    </canvas>
+</div>

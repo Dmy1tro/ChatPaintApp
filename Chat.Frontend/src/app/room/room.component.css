@@ -1,13 +1,27 @@
 .chat-container {
     flex: 1;
-    flex-grow: 1;
-}
-
-.drawer-container {
-    flex: 1.5;
-    flex-grow: 1;
 }
 
 .paint-container {
-    height: 85%;
+    flex: 1.5;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+tbody {
+    display: block;
+    overflow-y: auto;
+    height: calc(58vh);
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table {
+    margin-bottom: -0.5rem !important;
 }
